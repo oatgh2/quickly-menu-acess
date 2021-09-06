@@ -1,0 +1,70 @@
+﻿<Window x:Class="AppBarMenu.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppBarMenu"
+        mc:Ignorable="d"
+        Title="Quick Acess Menu" Height="450" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <ListBox ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Left" Height="360" Margin="15,10,0,0" VerticalAlignment="Top" Width="355" DragEnter="ListaDeItensBox_DragEnter" DragOver="ListaDeItensBox_DragOver" Drop="ListaDeItensBox_Drop" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp">
+            <ListBox.ContextMenu>
+                <ContextMenu x:Name="ContextStripListOpen">
+                    <MenuItem x:Name="BtnOpenItem" Click="ItemControlOpen_Click">
+                        <MenuItem.Icon >
+                            <Image Source="open_icon.png" />
+                        </MenuItem.Icon>
+                        <MenuItem.Header>Abrir</MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem x:Name="BtnOpenFileItem" Click="ItemControlOpenFile_Click">
+                        <MenuItem.Icon >
+                            <Image Source="open_file.png" />
+                        </MenuItem.Icon>
+                        <MenuItem.Header>Abrir Pasta</MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem x:Name="BtnDetailItem" Click="ItemControlDetails_Click">
+                        <MenuItem.Icon >
+                            <Image Source="details_icon.png" />
+                        </MenuItem.Icon>
+                        <MenuItem.Header>Detalhes</MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem x:Name="BtnRemoveItem" Click="ItemControlRemove_Click">
+                        <MenuItem.Icon>
+                            <Image Source="delete_icon.png"></Image>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>Remover</MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem x:Name="BtnExcludItem" Click="ItemControlExclude_Click">
+                        <MenuItem.Icon>
+                            <Image Source="exclude_icon.png"></Image>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>Excluir</MenuItem.Header>
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+        <Button x:Name="BtnAdd" Content="Adicionar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="164" Click="BtnAdd_Click" Margin="375,10,0,0"/>
+        <!--<DataGrid x:Name="dg1" HorizontalAlignment="Left" Margin="393,10,0,0" VerticalAlignment="Top" Height="326" Width="331">
+            <DataGrid.ContextMenu>
+                <ContextMenu BorderBrush="Black" BorderThickness="1">
+
+                    <MenuItem Header="_Export as Excel"   
+                              Click="MenuItem_Click"  
+                              />
+                    <MenuItem Header="_Menu Item1"  
+                              Click="MenuItem_Click_1"                                
+                              />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+        </DataGrid>-->
+    </Grid>
+</Window>

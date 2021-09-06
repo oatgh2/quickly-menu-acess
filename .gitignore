@@ -1,0 +1,9 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+/AppBarMenu/AppBarMenu/bin/Debug
+/AppBarMenu/Entities/obj/Debug
+/AppBarMenu/AppBarMenu/obj/Debug
+/AppBarMenu/AppBarMenu/AppBarMenu.csproj.user
+/AppBarMenu/.vs/AppBarMenu/v16/.suo
