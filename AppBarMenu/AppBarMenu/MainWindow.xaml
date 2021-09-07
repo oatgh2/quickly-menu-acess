@@ -29,7 +29,7 @@
                         <MenuItem.Header>Abrir</MenuItem.Header>
                     </MenuItem>
                     <MenuItem x:Name="BtnOpenFileItem" Click="ItemControlOpenFile_Click">
-                        <MenuItem.Icon >
+                        <MenuItem.Icon>
                             <Image Source="open_file.png" />
                         </MenuItem.Icon>
                         <MenuItem.Header>Abrir Pasta</MenuItem.Header>

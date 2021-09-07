@@ -94,6 +94,7 @@ namespace AppBarMenu
             }
           }
         }
+
         Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         object regInit = key.GetValue("QuickStartMenu");
