@@ -57,14 +57,7 @@ namespace AppBarMenu
       try
       {
         _controller = new FilesController();
-        ReloadList();
-        ListaDeItensBox.AllowDrop = true;
-        trayBar.Icon = new System.Drawing.Icon("favicon.ico");
-        trayBar.Visible = true;
-        trayBar.DoubleClick += DoubleClickTrayBar;
-
         string[] imagesString = FileHelper.GetImages();
-
         for (int i = 0; i < imagesString.Length; i++)
         {
           string image = imagesString[i];
@@ -79,13 +72,14 @@ namespace AppBarMenu
                 imagem_Details = Drawing.Image.FromStream(msImg);
                 break;
               case 2:
-                imagem_Exclude = Drawing.Image.FromStream(msImg);
+                imagem_Open = Drawing.Image.FromStream(msImg);
+
                 break;
               case 3:
                 imagem_OpenFile = Drawing.Image.FromStream(msImg);
                 break;
               case 4:
-                imagem_Open = Drawing.Image.FromStream(msImg);
+                imagem_Exclude = Drawing.Image.FromStream(msImg);
                 break;
               case 5:
                 break;
@@ -94,6 +88,15 @@ namespace AppBarMenu
             }
           }
         }
+        ReloadList();
+        
+        ListaDeItensBox.AllowDrop = true;
+        trayBar.Icon = new System.Drawing.Icon("favicon.ico");
+        trayBar.Visible = true;
+        trayBar.DoubleClick += DoubleClickTrayBar;
+
+
+        
         Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         object regInit = key.GetValue("QuickStartMenu");
