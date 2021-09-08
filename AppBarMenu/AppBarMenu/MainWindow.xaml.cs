@@ -42,6 +42,8 @@ namespace AppBarMenu
     private Drawing.Image imagem_Exclude;
     private Drawing.Image imagem_OpenFile;
     private Drawing.Image imagem_Open;
+    private Drawing.Image favicon;
+    private Drawing.Icon faviconIco;
     public MainWindow()
     {
       InitializeComponent();
@@ -82,6 +84,8 @@ namespace AppBarMenu
                 imagem_Exclude = Drawing.Image.FromStream(msImg);
                 break;
               case 5:
+                faviconIco = new Drawing.Icon(msImg);
+                favicon = faviconIco.ToBitmap();
                 break;
               default:
                 break;
@@ -91,7 +95,7 @@ namespace AppBarMenu
         ReloadList();
         
         ListaDeItensBox.AllowDrop = true;
-        trayBar.Icon = new System.Drawing.Icon("favicon.ico");
+        trayBar.Icon = faviconIco;
         trayBar.Visible = true;
         trayBar.DoubleClick += DoubleClickTrayBar;
 
@@ -197,11 +201,11 @@ namespace AppBarMenu
           if (!string.IsNullOrEmpty(item.Extension))
             imagemIcon = Drawing.Icon.ExtractAssociatedIcon(item.Path).ToBitmap();
           else
-            imagemIcon = Drawing.Icon.ExtractAssociatedIcon("explorer.exe").ToBitmap();
+            imagemIcon = Drawing.Icon.ExtractAssociatedIcon(System.IO.Path.Combine(Environment.SystemDirectory, "..\\explorer.exe")).ToBitmap();
         }
         catch (Exception ex)
         {
-          imagemIcon = Drawing.Image.FromFile("favicon.ico");
+          imagemIcon = favicon;
 
         }
         //string.IsNullOrEmpty(item.Extension) ? item.Name
@@ -214,7 +218,7 @@ namespace AppBarMenu
           , new Forms.ToolStripButton($"{i}. Abrir Pasta", imagem_OpenFile, ClickTraybarOpenFolder))); ;
       }
       trayBar.ContextMenuStrip.Items.Add(new
-      Forms.ToolStripButton("Sair", Drawing.Image.FromFile("exclude_icon.png"), TrayBarCloseProgram));
+      Forms.ToolStripButton("Sair", imagem_Exclude, TrayBarCloseProgram));
     }
 
     void TrayBarCloseProgram(object sender, EventArgs e)
