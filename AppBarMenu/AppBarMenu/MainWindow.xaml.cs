@@ -5,24 +5,16 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Shell;
+using RegistryManager.RegManager;
+using static RegistryManager.Enum.EnumRegHelper;
 using System.Reflection;
-using System.Buffers.Text;
 
 namespace AppBarMenu
 {
@@ -49,10 +41,10 @@ namespace AppBarMenu
       InitializeComponent();
       InitialConfigs();
       this.Hide();
-      
+
     }
 
-    
+
 
     private void InitialConfigs()
     {
@@ -93,23 +85,19 @@ namespace AppBarMenu
           }
         }
         ReloadList();
-        
+
         ListaDeItensBox.AllowDrop = true;
         trayBar.Icon = faviconIco;
         trayBar.Visible = true;
         trayBar.DoubleClick += DoubleClickTrayBar;
-
-
-        
-        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        object regInit = key.GetValue("QuickStartMenu");
-        if (regInit == null)
-          key.SetValue("QuickStartMenu", local + "\\QuickStartMenu.exe");
 
-
-
-
+        try
+        {
+          RegistryHelper.RegInitializeWithWin(ToDo.Create);
+          RegistryHelper.RegContextWindowsMenu(ToDo.Create, local + @"\QuickStartMenu.exe", "Adicionar ao Quickly Menu");
+        }
+        catch (Exception ex) { }
       }
       catch (Exception ex)
       {

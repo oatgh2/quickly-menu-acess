@@ -12,3 +12,12 @@
 /AppBarMenu/AppBarMenu/obj/x64
 /AppBarMenu/AppBarMenu/obj/x86/Release/TempPE
 /AppBarMenu/AppBarMenu/obj/x86/Release
+/AppBarMenu/.vs/AppBarMenu/DesignTimeBuild
+/AppBarMenu/RegistryManager/bin/Debug
+/AppBarMenu/RegistryManager/bin/Release
+/AppBarMenu/RegistryManager/obj
+/AppBarMenu/InsertItem/bin
+/AppBarMenu/InsertItem/obj/Debug/netcoreapp3.1
+/AppBarMenu/InsertItem/obj/Release/netcoreapp3.1
+/AppBarMenu/InsertItem/obj
+/AppBarMenu/AppBarMenu/bin/Release

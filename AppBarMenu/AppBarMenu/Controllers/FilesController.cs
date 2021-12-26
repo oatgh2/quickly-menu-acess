@@ -38,8 +38,6 @@ namespace AppBarMenu.Controllers
       list.RemoveAt(index);
       SerializeObj(list);
     }
-
-
     public void Add(FileModel model)
     {
       List<FileModel> list = GetFiles();
