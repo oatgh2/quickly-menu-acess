@@ -15,6 +15,7 @@ using System.Windows.Shell;
 using RegistryManager.RegManager;
 using static RegistryManager.Enum.EnumRegHelper;
 using System.Reflection;
+using System.Windows.Threading;
 
 namespace AppBarMenu
 {
@@ -43,8 +44,6 @@ namespace AppBarMenu
       this.Hide();
 
     }
-
-
 
     private void InitialConfigs()
     {
@@ -91,7 +90,7 @@ namespace AppBarMenu
         trayBar.Visible = true;
         trayBar.DoubleClick += DoubleClickTrayBar;
         string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
+        iniciaVerificacaoUpdate(local);
         try
         {
           RegistryHelper.RegInitializeWithWin(ToDo.Create);
@@ -116,11 +115,29 @@ namespace AppBarMenu
       //_contextMenu.Items.Add(_itemContextMenuRemove);
       //_contextMenu.Items.Add(_itemContextMenuDetails);
     }
+    
+    FileSystemWatcher fsw;
+    
+    void iniciaVerificacaoUpdate(string local)
+    {
+      fsw = new FileSystemWatcher(local);
+      fsw.EnableRaisingEvents = true;
+      fsw.IncludeSubdirectories = true;
+      fsw.Changed += new FileSystemEventHandler(UpdatedContext);
+      fsw.Filter = "Files.json";
+    }
+
+    private void UpdatedContext(object sender, FileSystemEventArgs e)
+    {
+      Action updateList = () => { ReloadList(); };
+      Dispatcher.BeginInvoke(updateList);
+    }
 
     void DoubleClickTrayBar(object sender, EventArgs e)
     {
       this.Show();
     }
+    
     void ClickTraybarOpen(object sender, EventArgs e)
     {
       try
@@ -133,6 +150,7 @@ namespace AppBarMenu
       }
       catch (Exception ex) { }
     }
+
     void ClickTrayBarOpenMain(object sender, EventArgs e)
     {
       this.Show();
@@ -213,10 +231,7 @@ namespace AppBarMenu
     {
       Environment.Exit(0);
     }
-    //private void BtnAdd2_Click(object sender, RoutedEventArgs e)
-    //{
-    //  MessageBox.Show("clicado no xmlamammsasaqs");
-    //}
+    
     private void AddItemTrayBarButton(object sender, EventArgs e)
     {
       OpenFileDialog fileDialog = new OpenFileDialog();
@@ -290,7 +305,6 @@ namespace AppBarMenu
       ReloadList();
     }
 
-
     private void ItemControlExclude_Click(object sender, RoutedEventArgs e)
     {
       try
@@ -335,6 +349,7 @@ namespace AppBarMenu
       catch (Exception ex) { }
 
     }
+
     private void ItemControlOpenFile_Click(object sender, RoutedEventArgs e)
     {
       try
@@ -352,7 +367,6 @@ namespace AppBarMenu
       }
       catch (Exception ex) { }
     }
-
 
     private void ItemControlRemove_Click(object sender, RoutedEventArgs e)
     {
@@ -377,7 +391,6 @@ namespace AppBarMenu
 
     }
 
-
     private void ItemControlDetails_Click(object sender, RoutedEventArgs e)
     {
       try
@@ -397,6 +410,7 @@ namespace AppBarMenu
 
       }
     }
+
     private void ListaDeItensBox_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       try
@@ -433,21 +447,5 @@ namespace AppBarMenu
       this.Hide();
       trayBar.ShowBalloonTip(2500, "QuickStartMenu", "Use o menu rápido para navegar.", Forms.ToolTipIcon.Info);
     }
-
-    //private void Button_Click(object sender, RoutedEventArgs e)
-    //{
-    //  //Drawing.Image delete_icon = Drawing.Image.FromFile("delete_icon.png");
-    //  //Drawing.Image details_icon = Drawing.Image.FromFile("details_icon.png");
-    //  //Drawing.Image exclude_icon = Drawing.Image.FromFile("exclude_icon.png");
-    //  //Drawing.Image favicon = Drawing.Image.FromFile("favicon.ico");
-    //  //Drawing.Image open_file = Drawing.Image.FromFile("open_file.png");
-    //  //Drawing.Image open_icon = Drawing.Image.FromFile("open_icon.png");
-    //  using (MemoryStream ms = new MemoryStream())
-    //  {
-    //    favicon.Save(ms, favicon.RawFormat);
-    //    byte[] details_img = ms.ToArray();
-    //    string resp = Convert.ToBase64String(details_img);
-    //  }
-    //}
   }
 }

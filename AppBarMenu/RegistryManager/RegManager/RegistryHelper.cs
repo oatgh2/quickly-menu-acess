@@ -54,7 +54,7 @@ namespace RegistryManager.RegManager
             regContextInit.CreateSubKey("command");
             RegistryKey regContextCommandInit = regContextInit.OpenSubKey("command", true);
             string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            regContextCommandInit.SetValue("", local + "\\");
+            regContextCommandInit.SetValue("","\"" + local + @"\QuickStartMenu.exe" + "\"" + @" ""%1""");
             return "Registry Created";
           }
           else
