@@ -1,21 +1,22 @@
-﻿using AppBarMenu.Controllers;
+﻿using AppBarMenu.Infraestructure;
+using AppBarMenu.Controllers;
 using AppBarMenu.Helpers;
 using Entities.Entidades;
 using Microsoft.Win32;
+using RegistryManager.RegManager;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Threading;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shell;
+using static RegistryManager.Enum.EnumRegHelper;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
-using System.Windows.Shell;
-using RegistryManager.RegManager;
-using static RegistryManager.Enum.EnumRegHelper;
-using System.Reflection;
-using System.Windows.Threading;
 
 namespace AppBarMenu
 {
@@ -37,12 +38,14 @@ namespace AppBarMenu
     private Drawing.Image imagem_Open;
     private Drawing.Image favicon;
     private Drawing.Icon faviconIco;
-    public MainWindow()
+    private Configuration _configuration;
+    public MainWindow(Configuration config)
     {
+      _configuration = config;
       InitializeComponent();
       InitialConfigs();
-      this.Hide();
-
+      if (_configuration["HideOnInit"])
+        this.Hide();
     }
 
     private void InitialConfigs()
@@ -83,17 +86,23 @@ namespace AppBarMenu
             }
           }
         }
-        ReloadList();
+        _reloadList();
 
         ListaDeItensBox.AllowDrop = true;
         trayBar.Icon = faviconIco;
         trayBar.Visible = true;
         trayBar.DoubleClick += DoubleClickTrayBar;
         string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        iniciaVerificacaoUpdate(local);
+        //iniciaVerificacaoUpdate(local);
         try
         {
-          RegistryHelper.RegInitializeWithWin(ToDo.Create);
+          bool isInitializeWith = _configuration["StartWithSystem"];
+          
+          if (isInitializeWith)
+            RegistryHelper.RegInitializeWithWin(ToDo.Create);
+          else
+            RegistryHelper.RegInitializeWithWin(ToDo.Delete);
+
           RegistryHelper.RegContextWindowsMenu(ToDo.Create, local + @"\QuickStartMenu.exe", "Adicionar ao Quickly Menu");
         }
         catch (Exception ex) { }
@@ -115,29 +124,33 @@ namespace AppBarMenu
       //_contextMenu.Items.Add(_itemContextMenuRemove);
       //_contextMenu.Items.Add(_itemContextMenuDetails);
     }
-    
-    FileSystemWatcher fsw;
-    
-    void iniciaVerificacaoUpdate(string local)
-    {
-      fsw = new FileSystemWatcher(local);
-      fsw.EnableRaisingEvents = true;
-      fsw.IncludeSubdirectories = true;
-      fsw.Changed += new FileSystemEventHandler(UpdatedContext);
-      fsw.Filter = "Files.json";
-    }
 
-    private void UpdatedContext(object sender, FileSystemEventArgs e)
-    {
-      Action updateList = () => { ReloadList(); };
-      Dispatcher.BeginInvoke(updateList);
-    }
+    //FileSystemWatcher fsw;
+
+    //void iniciaVerificacaoUpdate(string local)
+    //{
+    //  Thread trheadFSW = new Thread(() =>
+    //  {
+    //    fsw = new FileSystemWatcher(local);
+    //    fsw.EnableRaisingEvents = true;
+    //    fsw.IncludeSubdirectories = true;
+    //    fsw.Changed += new FileSystemEventHandler(UpdatedContext);
+    //    fsw.Filter = "Files.json";
+    //  });
+    //  trheadFSW.Start();
+    //}
+
+    //private void UpdatedContext(object sender, FileSystemEventArgs e)
+    //{
+    //  Action updateList = () => { _reloadList(); };
+    //  this.Dispatcher.Invoke(updateList);
+    //}
 
     void DoubleClickTrayBar(object sender, EventArgs e)
     {
       this.Show();
     }
-    
+
     void ClickTraybarOpen(object sender, EventArgs e)
     {
       try
@@ -157,6 +170,8 @@ namespace AppBarMenu
 
     }
 
+    
+
     void ClickTraybarOpenFolder(object sender, EventArgs e)
     {
       Forms.ToolStripButton entidade = sender as Forms.ToolStripButton;
@@ -171,8 +186,14 @@ namespace AppBarMenu
       catch (Exception ex) { }
     }
 
-    void ReloadList()
+    public void RefrashReoloadList() { 
+       _reloadList();
+    }
+
+
+    void _reloadList()
     {
+      _controller.AtualizaString();
       _listModels = _controller.GetFiles();
       ListaDeItensBox.Items.Clear();
       JumpList jumpList = new JumpList();
@@ -231,7 +252,7 @@ namespace AppBarMenu
     {
       Environment.Exit(0);
     }
-    
+
     private void AddItemTrayBarButton(object sender, EventArgs e)
     {
       OpenFileDialog fileDialog = new OpenFileDialog();
@@ -248,7 +269,7 @@ namespace AppBarMenu
           Extension = extension,
           MimmeType = mimmeType
         });
-        ReloadList();
+        _reloadList();
       }
     }
 
@@ -268,21 +289,21 @@ namespace AppBarMenu
           Extension = extension,
           MimmeType = mimmeType
         });
-        ReloadList();
+        _reloadList();
       }
 
     }
 
-    private void ListaDeItensBox_DragEnter(object sender, DragEventArgs e)
+    private void Box_DragEnter(object sender, DragEventArgs e)
     {
       if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effects = DragDropEffects.Copy;
     }
 
-    private void ListaDeItensBox_DragOver(object sender, DragEventArgs e)
+    private void Box_DragOver(object sender, DragEventArgs e)
     {
     }
 
-    private void ListaDeItensBox_Drop(object sender, DragEventArgs e)
+    private void Box_Drop(object sender, DragEventArgs e)
     {
       string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
       foreach (string item in files)
@@ -302,7 +323,7 @@ namespace AppBarMenu
           MimmeType = mimmeType
         });
       }
-      ReloadList();
+      _reloadList();
     }
 
     private void ItemControlExclude_Click(object sender, RoutedEventArgs e)
@@ -316,7 +337,7 @@ namespace AppBarMenu
           if (result == MessageBoxResult.Yes)
           {
             _controller.DeleteFile(ListaDeItensBox.SelectedIndex);
-            ReloadList();
+            _reloadList();
           }
         }
         else
@@ -376,7 +397,7 @@ namespace AppBarMenu
         {
           int itemSelecionado = ListaDeItensBox.SelectedIndex;
           _controller.Remove(itemSelecionado);
-          ReloadList();
+          _reloadList();
         }
         else
         {

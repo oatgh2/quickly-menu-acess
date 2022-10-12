@@ -22,3 +22,6 @@
 /AppBarMenu/InsertItem/obj
 /AppBarMenu/AppBarMenu/bin/Release
 /AppBarMenu/Testador
+/AppBarMenu/AppBarMenu/bin/x64/Debug
+/AppBarMenu/Configurator/bin
+/AppBarMenu/Configurator/obj

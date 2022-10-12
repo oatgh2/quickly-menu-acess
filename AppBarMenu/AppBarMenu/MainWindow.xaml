@@ -16,52 +16,63 @@
      TextElement.FontSize="13"
      TextOptions.TextFormattingMode="Ideal"
      TextOptions.TextRenderingMode="Auto"
+     AllowDrop="True"
      Background="{DynamicResource MaterialDesignPaper}"
      FontFamily="{DynamicResource MaterialDesignFont}" Height="600" Width="650">
+  <Border CornerRadius="7, 7, 7, 7">
+
     <Grid>
-        <ListBox ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Center" Height="307" Margin="14,10,14,0" VerticalAlignment="Top" Width="622" DragEnter="ListaDeItensBox_DragEnter" DragOver="ListaDeItensBox_DragOver" Drop="ListaDeItensBox_Drop" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="Black" BorderBrush="Black" Background="#195C00FF" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick">
-            <ListBox.ContextMenu>
-                <ContextMenu x:Name="ContextStripListOpen">
-                    <MenuItem x:Name="BtnOpenItem" Click="ItemControlOpen_Click">
-                        <MenuItem.Icon >
-                            <Image Source="open_icon.png" />
-                        </MenuItem.Icon>
-                        <MenuItem.Header>Abrir</MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem x:Name="BtnOpenFileItem" Click="ItemControlOpenFile_Click">
-                        <MenuItem.Icon >
-                            <Image Source="open_file.png" />
-                        </MenuItem.Icon>
-                        <MenuItem.Header>Abrir Pasta</MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem x:Name="BtnDetailItem" Click="ItemControlDetails_Click">
-                        <MenuItem.Icon >
-                            <Image Source="details_icon.png" />
-                        </MenuItem.Icon>
-                        <MenuItem.Header>Detalhes</MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem x:Name="BtnRemoveItem" Click="ItemControlRemove_Click">
-                        <MenuItem.Icon>
-                            <Image Source="delete_icon.png"></Image>
-                        </MenuItem.Icon>
-                        <MenuItem.Header>Remover</MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem x:Name="BtnExcludItem" Click="ItemControlExclude_Click">
-                        <MenuItem.Icon>
-                            <Image Source="exclude_icon.png"></Image>
-                        </MenuItem.Icon>
-                        <MenuItem.Header>Excluir</MenuItem.Header>
-                    </MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListBox>
-        <Button x:Name="BtnAdd" Content="Adicionar" VerticalAlignment="Center" Width="100" Click="BtnAdd_Click" Margin="14,377,536,183" Height="40" HorizontalAlignment="Center"/>
-        <Button x:Name="CloseBtn" Content="Sair" HorizontalAlignment="Left" Margin="561,558,0,0" VerticalAlignment="Top" Width="75" Click="CloseBtn_Click"/>
-        <Label Content="Total:" HorizontalAlignment="Left" Margin="14,322,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="ValorTotalLbl" Content="" HorizontalAlignment="Left" Margin="14,346,0,0" VerticalAlignment="Top"/>
+      <Grid.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+          <GradientStop Color="#FF8422FF" Offset="0.847"/>
+          <GradientStop Color="#FFEFE2FF" Offset="1"/>
+        </LinearGradientBrush>
+      </Grid.Background>
 
 
-        <!--<DataGrid x:Name="dg1" HorizontalAlignment="Left" Margin="393,10,0,0" VerticalAlignment="Top" Height="326" Width="331">
+      <ListBox ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Center" Height="358" Margin="0,85,0,0" VerticalAlignment="Top" Width="622" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="White" BorderBrush="Black" Background="{x:Null}" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick">
+        <ListBox.ContextMenu>
+          <ContextMenu x:Name="ContextStripListOpen">
+            <MenuItem x:Name="BtnOpenItem" Click="ItemControlOpen_Click">
+              <MenuItem.Icon >
+                <Image Source="open_icon.png" />
+              </MenuItem.Icon>
+              <MenuItem.Header>Abrir</MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="BtnOpenFileItem" Click="ItemControlOpenFile_Click">
+              <MenuItem.Icon >
+                <Image Source="open_file.png" />
+              </MenuItem.Icon>
+              <MenuItem.Header>Abrir Pasta</MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="BtnDetailItem" Click="ItemControlDetails_Click">
+              <MenuItem.Icon >
+                <Image Source="details_icon.png" />
+              </MenuItem.Icon>
+              <MenuItem.Header>Detalhes</MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="BtnRemoveItem" Click="ItemControlRemove_Click">
+              <MenuItem.Icon>
+                <Image Source="delete_icon.png"></Image>
+              </MenuItem.Icon>
+              <MenuItem.Header>Remover</MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="BtnExcludItem" Click="ItemControlExclude_Click">
+              <MenuItem.Icon>
+                <Image Source="exclude_icon.png"></Image>
+              </MenuItem.Icon>
+              <MenuItem.Header>Excluir</MenuItem.Header>
+            </MenuItem>
+          </ContextMenu>
+        </ListBox.ContextMenu>
+      </ListBox>
+      <Button x:Name="BtnAdd" Content="Adicionar" VerticalAlignment="Top" Width="101" Click="BtnAdd_Click" Margin="10,452,0,0" Height="40" HorizontalAlignment="Left" Background="#FF3A42B7" Cursor="Hand" BorderBrush="{x:Null}"/>
+      <Button x:Name="CloseBtn" Content="Sair" HorizontalAlignment="Left" Margin="561,558,0,0" VerticalAlignment="Top" Width="75" Click="CloseBtn_Click" Background="#FF3A42B7" Cursor="Hand" BorderBrush="{x:Null}"/>
+      <Label x:Name="ValorTotalLbl" Content="" HorizontalAlignment="Left" Margin="10,421,0,0" VerticalAlignment="Top" Width="8"/>
+
+
+
+      <!--<DataGrid x:Name="dg1" HorizontalAlignment="Left" Margin="393,10,0,0" VerticalAlignment="Top" Height="326" Width="331">
             <DataGrid.ContextMenu>
                 <ContextMenu BorderBrush="Black" BorderThickness="1">
 
@@ -76,4 +87,6 @@
 
         </DataGrid>-->
     </Grid>
+  </Border>
+
 </Window>

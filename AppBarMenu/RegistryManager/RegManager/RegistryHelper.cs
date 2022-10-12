@@ -36,31 +36,25 @@ namespace RegistryManager.RegManager
     {
       RegistryKey keyContextMenuWindowsExecuteShell = Registry.ClassesRoot.OpenSubKey("*").OpenSubKey("shell", true);
       RegistryKey regContextInit = keyContextMenuWindowsExecuteShell.OpenSubKey("Open with QuicklyMenu", true);
-      if(regContextInit == null && todo != ToDo.Create)
+      if (regContextInit == null && todo != ToDo.Create)
       {
         throw new Exception("Error, the key does not exists");
       }
       switch (todo)
       {
         case ToDo.Create:
-          
-          if (regContextInit == null)
-          {
 
-            keyContextMenuWindowsExecuteShell.CreateSubKey(@"Open with QuicklyMenu");
-            regContextInit = keyContextMenuWindowsExecuteShell.OpenSubKey("Open with QuicklyMenu", true);
-            regContextInit.SetValue("", description);
-            regContextInit.SetValue("Icon", iconPath);
-            regContextInit.CreateSubKey("command");
-            RegistryKey regContextCommandInit = regContextInit.OpenSubKey("command", true);
-            string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            regContextCommandInit.SetValue("","\"" + local + @"\QuickStartMenu.exe" + "\"" + @" ""%1""");
-            return "Registry Created";
-          }
-          else
-          {
-            return "Registry Already Exists";
-          }
+
+          keyContextMenuWindowsExecuteShell.CreateSubKey(@"Open with QuicklyMenu");
+          regContextInit = keyContextMenuWindowsExecuteShell.OpenSubKey("Open with QuicklyMenu", true);
+          regContextInit.SetValue("", description);
+          regContextInit.SetValue("Icon", iconPath);
+          regContextInit.CreateSubKey("command");
+          RegistryKey regContextCommandInit = regContextInit.OpenSubKey("command", true);
+          string local = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+          regContextCommandInit.SetValue("", "\"" + local + @"\QuickStartMenu.exe" + "\"" + @" ""%1""");
+          return "Registry Created";
+
         case ToDo.Delete:
           keyContextMenuWindowsExecuteShell.DeleteSubKey("Open with QuicklyMenu");
           return "Registry Deleted";
