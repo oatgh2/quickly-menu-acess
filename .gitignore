@@ -25,3 +25,5 @@
 /AppBarMenu/AppBarMenu/bin/x64/Debug
 /AppBarMenu/Configurator/bin
 /AppBarMenu/Configurator/obj
+/AppBarMenu/.vs/AppBarMenu/v17/.suo
+*.vsidx
