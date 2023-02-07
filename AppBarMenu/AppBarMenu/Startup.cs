@@ -23,6 +23,17 @@ namespace AppBarMenu
 
     void App_Startup(object sender, StartupEventArgs e)
     {
+      if(e.Args.Length != 0)
+      {
+        if (e.Args[0].Equals("--just-run"))
+        {
+          MainWindow mainWindow = new MainWindow(_configuration);
+          new MainWindowSocketController(mainWindow).Start();
+          return;
+        }
+      }
+      
+
       Process currentProcess = Process.GetCurrentProcess();
       Process[] processes = Process.GetProcessesByName(currentProcess.ProcessName);
       Process process = processes.FirstOrDefault(p => p.Id != currentProcess.Id);
@@ -73,6 +84,7 @@ namespace AppBarMenu
           Extension = extension,
           MimmeType = mimmeType
         });
+        
         if (process != null)
         {
           try

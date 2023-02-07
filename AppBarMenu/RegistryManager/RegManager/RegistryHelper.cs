@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using static RegistryManager.Enum.EnumRegHelper;
@@ -11,8 +13,29 @@ namespace RegistryManager.RegManager
 {
   public static class RegistryHelper
   {
+
+    private static bool isRunningAsAdm()
+    {
+      try
+      {
+        WindowsIdentity id = WindowsIdentity.GetCurrent();
+        WindowsPrincipal principal = new WindowsPrincipal(id);
+        bool result = principal.IsInRole(WindowsBuiltInRole.Administrator);
+        return result;
+      }
+      catch (Exception ex)
+      {
+        return false;
+      }
+    }
+
+
+
     public static void RegInitializeWithWin(ToDo todo)
     {
+      if (!isRunningAsAdm())
+        RunAsAdm();
+
       RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
       if (key == null && todo == ToDo.Delete)
       {
@@ -32,8 +55,30 @@ namespace RegistryManager.RegManager
       }
     }
 
+    public static void RunAsAdm()
+    {
+      ProcessStartInfo proc = new ProcessStartInfo();
+      proc.UseShellExecute = true;
+      proc.WorkingDirectory = Environment.CurrentDirectory;
+      proc.FileName = Assembly.GetEntryAssembly().Location;
+      proc.Arguments = "--just-run";
+      proc.Verb = "runas";
+
+      try
+      {
+        Process.Start(proc);
+        Environment.Exit(0);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("This program must be run as an administrator! \n\n" + ex.ToString());
+      }
+    }
+
     public static string RegContextWindowsMenu(ToDo todo, string iconPath, string description)
     {
+      if (!isRunningAsAdm())
+        RunAsAdm();
       RegistryKey keyContextMenuWindowsExecuteShell = Registry.ClassesRoot.OpenSubKey("*").OpenSubKey("shell", true);
       RegistryKey regContextInit = keyContextMenuWindowsExecuteShell.OpenSubKey("Open with QuicklyMenu", true);
       if (regContextInit == null && todo != ToDo.Create)
