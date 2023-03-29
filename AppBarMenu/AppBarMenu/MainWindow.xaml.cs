@@ -17,6 +17,10 @@ using System.Windows.Shell;
 using static RegistryManager.Enum.EnumRegHelper;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Windows.UI.Notifications;
+using Windows.ApplicationModel.Activation;
+using Windows.Foundation.Collections;
 
 namespace AppBarMenu
 {
@@ -47,6 +51,36 @@ namespace AppBarMenu
       if (_configuration["HideOnInit"])
         this.Hide();
     }
+
+    //public static void ShowToast(string message, Guid itemId)
+    //{
+    //  ToastContentBuilder toast = new ToastContentBuilder();
+    //  toast
+    //  .AddArgument("item_Id", itemId.ToString())
+    //  .AddText(message)
+    //  .AddButton(new ToastButton()
+    //  .SetContent("Desfazer")
+    //  .AddArgument("action", "undo"))
+    //  .Show();
+    //  //ToastNotifier notifier = ToastNotificationManager.CreateToastNotifier();
+    //  //ToastNotification notification = new ToastNotification(toast.GetXml());
+    //  //notifier.Show(notification);
+    //}
+
+    //protected override void OnActivated(IActivatedEventArgs e)
+    //{
+    //  // Handle notification activation
+    //  if (e is ToastNotificationActivatedEventArgs toastActivationArgs)
+    //  {
+    //    // Obtain the arguments from the notification
+    //    ToastArguments args = ToastArguments.Parse(toastActivationArgs.Argument);
+
+    //    // Obtain any user input (text boxes, menu selections) from the notification
+    //    ValueSet userInput = toastActivationArgs.UserInput;
+
+    //    // TODO: Show the corresponding content
+    //  }
+    //}
 
     private void InitialConfigs()
     {
@@ -97,7 +131,7 @@ namespace AppBarMenu
         try
         {
           bool isInitializeWith = _configuration["StartWithSystem"];
-          
+
           if (isInitializeWith)
             RegistryHelper.RegInitializeWithWin(ToDo.Create);
           else
@@ -159,7 +193,6 @@ namespace AppBarMenu
         string[] splittedValueName = entidade.AccessibilityObject.Name.Split('.');
         int objValueItemIndex = Int32.Parse(splittedValueName[0]);
         System.Diagnostics.Process.Start(_listModels[objValueItemIndex].Path);
-
       }
       catch (Exception ex) { }
     }
@@ -170,7 +203,7 @@ namespace AppBarMenu
 
     }
 
-    
+
 
     void ClickTraybarOpenFolder(object sender, EventArgs e)
     {
@@ -186,8 +219,9 @@ namespace AppBarMenu
       catch (Exception ex) { }
     }
 
-    public void RefrashReoloadList() { 
-       _reloadList();
+    public void RefrashReoloadList()
+    {
+      _reloadList();
     }
 
 
@@ -271,6 +305,26 @@ namespace AppBarMenu
         });
         _reloadList();
       }
+    }
+
+    private void ItemControlRenameFile_Click(object sender, RoutedEventArgs e)
+    {
+      MenuItem menuItem = sender as MenuItem;
+      
+      CustomDialog changePage = new CustomDialog("Digite o nome:", "Concluír");
+      changePage.OnDone += (newName, context) => {
+        CustomDialog c = (CustomDialog)context;
+        _controller.ChangeNameItem(ListaDeItensBox.SelectedIndex, newName);
+        _reloadList();
+      };
+
+      changePage.OnFinish += (context) =>
+      {
+        CustomDialog c = (CustomDialog)context;
+        c.Close();
+      };
+
+      changePage.Show();
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)
@@ -467,6 +521,11 @@ namespace AppBarMenu
     {
       this.Hide();
       trayBar.ShowBalloonTip(2500, "QuickStartMenu", "Use o menu rápido para navegar.", Forms.ToolTipIcon.Info);
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+      //ShowToast("Teste", Guid.NewGuid());
     }
   }
 }

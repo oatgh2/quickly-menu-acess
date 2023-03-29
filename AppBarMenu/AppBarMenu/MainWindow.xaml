@@ -39,6 +39,12 @@
               </MenuItem.Icon>
               <MenuItem.Header>Abrir</MenuItem.Header>
             </MenuItem>
+            <MenuItem x:Name="BtnChangeNameFile" Click="ItemControlRenameFile_Click">
+              <MenuItem.Icon >
+                <Image Source="open_icon.png" />
+              </MenuItem.Icon>
+              <MenuItem.Header>Renomear</MenuItem.Header>
+            </MenuItem>
             <MenuItem x:Name="BtnOpenFileItem" Click="ItemControlOpenFile_Click">
               <MenuItem.Icon >
                 <Image Source="open_file.png" />

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace AppBarMenu.Controllers
 {
@@ -16,6 +17,35 @@ namespace AppBarMenu.Controllers
     }
     private string _caminhoBase;
     private string _stringJsonLoad;
+
+    public void showToast()
+    {
+
+    }
+
+    public void ChangeNameItem(int itemPosition, string newName)
+    {
+      if (string.IsNullOrEmpty(newName))
+        return;
+
+      List<FileModel> files = GetFiles();
+
+      FileModel file = files[itemPosition];
+
+      if (file != null)
+      {
+        files.Remove(file);
+        file.Name = newName;
+        files.Add(file);
+        SerializeObj(files);
+      }
+      else
+      {
+        return;
+      }
+    }
+
+
     public void AtualizaString()
     {
       try
