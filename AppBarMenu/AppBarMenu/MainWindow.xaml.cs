@@ -310,11 +310,11 @@ namespace AppBarMenu
     private void ItemControlRenameFile_Click(object sender, RoutedEventArgs e)
     {
       MenuItem menuItem = sender as MenuItem;
-      
-      CustomDialog changePage = new CustomDialog("Digite o nome:", "Concluír");
+      int selectedIndex = ListaDeItensBox.SelectedIndex;
+      CustomDialog changePage = new CustomDialog("Concluír", "Digite o nome:", _controller.GetFiles()[selectedIndex].Name);
       changePage.OnDone += (newName, context) => {
         CustomDialog c = (CustomDialog)context;
-        _controller.ChangeNameItem(ListaDeItensBox.SelectedIndex, newName);
+        _controller.ChangeNameItem(selectedIndex, newName);
         _reloadList();
       };
 

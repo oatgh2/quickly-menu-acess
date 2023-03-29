@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:AppBarMenu"
         ResizeMode="NoResize"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Height="88" Width="287" WindowStyle="ToolWindow">
   <Grid Margin="10,10,10,10">
-    <Button Content="Salvar" HorizontalAlignment="Left" Margin="178,0,0,0" VerticalAlignment="Center" Width="79" x:Name="BtnClickSaveNewName" Click="BtnClickSaveNewName_Click"/>
-    <TextBox x:Name="NewNameField"  HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Center" Width="163" Height="32">
+    <Button Content="Salvar" HorizontalAlignment="Left" Margin="178,0,0,0" VerticalAlignment="Center" Width="auto" x:Name="BtnClickSaveNewName" Click="BtnClickSaveNewName_Click"/>
+    <TextBox KeyUp="NewNameField_KeyUp" x:Name="NewNameField"  HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Center" Width="163" Height="32">
     </TextBox>
   </Grid>
 </Window>

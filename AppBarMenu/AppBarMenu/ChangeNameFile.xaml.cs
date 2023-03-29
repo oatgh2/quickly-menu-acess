@@ -24,15 +24,15 @@ namespace AppBarMenu
 
     public event NameChanged OnDone;
     public event Finishing OnFinish;
-    public CustomDialog(string buttonName, string title = "")
+    public CustomDialog(string buttonName, string title = "", string defaultValue = "")
     {
       InitializeComponent();
       this.Title = title;
-      BtnClickSaveNewName.Content= buttonName;
+      this.BtnClickSaveNewName.Content = buttonName;
+      this.NewNameField.Text = defaultValue;
     }
 
-
-    private void BtnClickSaveNewName_Click(object sender, RoutedEventArgs e)
+    public void done()
     {
       string typedValue = NewNameField.Text;
       if (string.IsNullOrEmpty(typedValue))
@@ -48,6 +48,15 @@ namespace AppBarMenu
       }
     }
 
+    private void BtnClickSaveNewName_Click(object sender, RoutedEventArgs e)
+    {
+      done();
+    }
 
+    private void NewNameField_KeyUp(object sender, KeyEventArgs e)
+    {
+      if (e.Key == Key.Enter)
+        done();
+    }
   }
 }
