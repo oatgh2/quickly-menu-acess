@@ -28,10 +28,27 @@ namespace AppBarMenu
     public CustomImageDialog(string _pathImage)
     {
       InitializeComponent();
-      Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(_pathImage);
+      Bitmap img = null;
+      _imageDialog.FileName = _pathImage;
+      string ext = System.IO.Path.GetExtension(_pathImage);
+      try
+      {
+        if (!(ext.Equals(".png") || ext.Equals(".jpg") || ext.Equals(".ico")))
+        {
+          Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(_pathImage);
+          img = icon.ToBitmap();
+        }
+        else
+        {
+          img = new Bitmap(_pathImage);
+        }
+      }
+      catch (Exception ex)
+      {
+        Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(_pathImage);
+        img = icon.ToBitmap();
+      }
       BitmapImage initialImg = new BitmapImage();
-      Bitmap img = icon.ToBitmap();
-
       try
       {
         using (MemoryStream ms = new MemoryStream())
@@ -41,7 +58,7 @@ namespace AppBarMenu
 
           initialImg.BeginInit();
           initialImg.StreamSource = ms;
-          initialImg.CacheOption= BitmapCacheOption.OnLoad;
+          initialImg.CacheOption = BitmapCacheOption.OnLoad;
           initialImg.EndInit();
           initialImg.Freeze();
         }
@@ -92,9 +109,14 @@ namespace AppBarMenu
         BitmapImage img = new BitmapImage();
         using (MemoryStream ms = new MemoryStream(image))
         {
+          img.BeginInit();
           img.StreamSource = ms;
+          img.CacheOption = BitmapCacheOption.OnLoad;
+          img.EndInit();
+          img.Freeze();
         }
         ImagePreview.Source = img;
+        _imageDialog = fileDialog;
       }
     }
   }

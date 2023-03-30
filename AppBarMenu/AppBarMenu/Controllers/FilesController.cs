@@ -91,7 +91,7 @@ namespace AppBarMenu.Controllers
 
     public void Add(FileModel model)
     {
-      model.ImagePath = model.Path;
+      //model.ImagePath = model.Path;
       List<FileModel> list = GetFiles();
       list.Add(model);
       SerializeObj(list);

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppBarMenu"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="CustomImageDialog" Height="221" Width="177">
   <Grid>
 

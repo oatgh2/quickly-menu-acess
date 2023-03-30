@@ -17,6 +17,7 @@ using System.Windows.Shell;
 using static RegistryManager.Enum.EnumRegHelper;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
+using System.Drawing;
 
 namespace AppBarMenu
 {
@@ -233,7 +234,8 @@ namespace AppBarMenu
         string name = string.IsNullOrEmpty(item.Extension) ? item.Name : item.Name.Replace(item.Extension, string.Empty);
         JumpTask jumpTask = new JumpTask();
         jumpTask.ApplicationPath = item.Path;
-        jumpTask.IconResourcePath = item.Path;
+        jumpTask.IconResourcePath = string.IsNullOrEmpty(item.ImagePath) ? item.Path : item.ImagePath;
+        jumpTask.IconResourceIndex = 1;
         jumpTask.Title = name;
         jumpTask.Description = "Abrir " + item.Name;
         jumpTask.CustomCategory = "Adcionados TOP(10)";
@@ -255,10 +257,24 @@ namespace AppBarMenu
         Drawing.Image imagemIcon;
         try
         {
-          if (!string.IsNullOrEmpty(item.Extension))
-            imagemIcon = Drawing.Icon.ExtractAssociatedIcon(item.Path).ToBitmap();
+          if (string.IsNullOrEmpty(item.ImagePath))
+          {
+            if (!string.IsNullOrEmpty(item.Extension))
+              imagemIcon = Drawing.Icon.ExtractAssociatedIcon(item.Path).ToBitmap();
+            else
+              imagemIcon = Drawing.Icon.ExtractAssociatedIcon(System.IO.Path.Combine(Environment.SystemDirectory, "..\\explorer.exe")).ToBitmap();
+          }
           else
-            imagemIcon = Drawing.Icon.ExtractAssociatedIcon(System.IO.Path.Combine(Environment.SystemDirectory, "..\\explorer.exe")).ToBitmap();
+          {
+            byte[] imageBytes = File.ReadAllBytes(item.ImagePath);
+            Drawing.Image img = null;
+            using (MemoryStream ms = new MemoryStream(imageBytes))
+            {
+              img = Drawing.Image.FromStream(ms);
+            }
+
+            imagemIcon = img;
+          }
         }
         catch (Exception ex)
         {
@@ -307,16 +323,19 @@ namespace AppBarMenu
     private void ChangeImageFile(int? item = null)
     {
       int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
-      CustomImageDialog changePage = new CustomImageDialog(_controller.GetFiles()[selectedIndex].ImagePath);
+      CustomImageDialog changePage = new CustomImageDialog(
+        string.IsNullOrEmpty(_controller.GetFiles()[selectedIndex].ImagePath) 
+        ? _controller.GetFiles()[selectedIndex].Path
+        : _controller.GetFiles()[selectedIndex].ImagePath);
       changePage.OnDone += (newName, context) => {
-        CustomDialog c = (CustomDialog)context;
+        CustomImageDialog c = (CustomImageDialog)context;
         _controller.ChangeImage(selectedIndex, newName);
         _reloadList();
       };
 
       changePage.OnFinish += (context) =>
       {
-        CustomDialog c = (CustomDialog)context;
+        CustomImageDialog c = (CustomImageDialog)context;
         c.Close();
       };
 
