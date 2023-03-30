@@ -13,5 +13,6 @@ namespace Entities.Entidades
     public string Path { get; set; }
     public string Extension { get; set; }
     public string MimmeType { get; set; }
+    public string ImagePath { get; set;}
   }
 }

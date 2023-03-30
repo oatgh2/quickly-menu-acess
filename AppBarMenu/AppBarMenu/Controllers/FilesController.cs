@@ -13,14 +13,31 @@ namespace AppBarMenu.Controllers
     public FilesController()
     {
       _caminhoBase = FileHelper.GetCaminhoBase();
-      AtualizaString();
+      RefreshString();
     }
     private string _caminhoBase;
     private string _stringJsonLoad;
 
-    public void showToast()
+    public void ChangeImage(int itemPosition, string newImagePath)
     {
+      if (string.IsNullOrEmpty(newImagePath))
+        return;
 
+      List<FileModel> files = GetFiles();
+
+      FileModel file = files[itemPosition];
+
+      if (file != null)
+      {
+        files.Remove(file);
+        file.ImagePath = newImagePath;
+        files.Add(file);
+        SerializeObj(files);
+      }
+      else
+      {
+        return;
+      }
     }
 
     public void ChangeNameItem(int itemPosition, string newName)
@@ -46,7 +63,7 @@ namespace AppBarMenu.Controllers
     }
 
 
-    public void AtualizaString()
+    public void RefreshString()
     {
       try
       {
@@ -62,14 +79,19 @@ namespace AppBarMenu.Controllers
       }
 
     }
+
+
+
     public void Remove(int index)
     {
       List<FileModel> list = GetFiles();
       list.RemoveAt(index);
       SerializeObj(list);
     }
+
     public void Add(FileModel model)
     {
+      model.ImagePath = model.Path;
       List<FileModel> list = GetFiles();
       list.Add(model);
       SerializeObj(list);

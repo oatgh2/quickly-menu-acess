@@ -1,0 +1,14 @@
+﻿<Window x:Class="AppBarMenu.CustomImageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppBarMenu"
+        mc:Ignorable="d"
+        Title="CustomImageDialog" Height="221" Width="177">
+  <Grid>
+
+    <Image Source="/details_icon.png" x:Name="ImagePreview"  Height="109" Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="111" MouseUp="ImagePreview_MouseUp"/>
+    <Button Content="Salvar" HorizontalAlignment="Center" Margin="0,124,0,0" VerticalAlignment="Top" Width="157" Click="Button_Click"/>
+  </Grid>
+</Window>

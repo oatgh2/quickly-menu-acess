@@ -17,10 +17,6 @@ using System.Windows.Shell;
 using static RegistryManager.Enum.EnumRegHelper;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
-using Microsoft.Toolkit.Uwp.Notifications;
-using Windows.UI.Notifications;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation.Collections;
 
 namespace AppBarMenu
 {
@@ -213,7 +209,7 @@ namespace AppBarMenu
       {
         string[] splittedValueName = entidade.AccessibilityObject.Name.Split('.');
         int objValueItemIndex = Int32.Parse(splittedValueName[0]);
-        var item = _listModels[objValueItemIndex];
+        FileModel item = _listModels[objValueItemIndex];
         System.Diagnostics.Process.Start("explorer.exe", item.Path.Replace(item.Name, string.Empty));
       }
       catch (Exception ex) { }
@@ -227,7 +223,7 @@ namespace AppBarMenu
 
     void _reloadList()
     {
-      _controller.AtualizaString();
+      _controller.RefreshString();
       _listModels = _controller.GetFiles();
       ListaDeItensBox.Items.Clear();
       JumpList jumpList = new JumpList();
@@ -275,8 +271,9 @@ namespace AppBarMenu
           new Forms.ToolStripDropDownButton(
             string.IsNullOrEmpty(item.Extension) ? item.Name
           : item.Name.Replace(item.Extension, string.Empty), imagemIcon
-          , new Forms.ToolStripButton($"{i}. Abrir", imagem_Open, ClickTraybarOpen)
-          , new Forms.ToolStripButton($"{i}. Abrir Pasta", imagem_OpenFile, ClickTraybarOpenFolder))); ;
+          , new Forms.ToolStripButton($"{i}. Abrir", imagem_Open, ClickTraybarOpen) 
+          , new Forms.ToolStripButton($"{i}. Abrir Pasta", imagem_OpenFile, ClickTraybarOpenFolder)
+          , new Forms.ToolStripButton($"{i}. Renomear", imagem_Open, RenameFileByTraybar)));
       }
       trayBar.ContextMenuStrip.Items.Add(new
       Forms.ToolStripButton("Sair", imagem_Exclude, TrayBarCloseProgram));
@@ -307,10 +304,28 @@ namespace AppBarMenu
       }
     }
 
-    private void ItemControlRenameFile_Click(object sender, RoutedEventArgs e)
+    private void ChangeImageFile(int? item = null)
     {
-      MenuItem menuItem = sender as MenuItem;
-      int selectedIndex = ListaDeItensBox.SelectedIndex;
+      int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
+      CustomImageDialog changePage = new CustomImageDialog(_controller.GetFiles()[selectedIndex].ImagePath);
+      changePage.OnDone += (newName, context) => {
+        CustomDialog c = (CustomDialog)context;
+        _controller.ChangeImage(selectedIndex, newName);
+        _reloadList();
+      };
+
+      changePage.OnFinish += (context) =>
+      {
+        CustomDialog c = (CustomDialog)context;
+        c.Close();
+      };
+
+      changePage.Show();
+    }
+
+    private void RenameFile(int? item = null)
+    {
+      int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
       CustomDialog changePage = new CustomDialog("Concluír", "Digite o nome:", _controller.GetFiles()[selectedIndex].Name);
       changePage.OnDone += (newName, context) => {
         CustomDialog c = (CustomDialog)context;
@@ -325,6 +340,24 @@ namespace AppBarMenu
       };
 
       changePage.Show();
+    }
+
+    private void RenameFileByTraybar(object sender, EventArgs e)
+    {
+      Forms.ToolStripButton entidade = sender as Forms.ToolStripButton;
+      string[] splittedValueName = entidade.AccessibilityObject.Name.Split('.');
+      int objValueItemIndex = Int32.Parse(splittedValueName[0]);
+      RenameFile(objValueItemIndex);
+    }
+
+    private void ItemControlRenameFile_Click(object sender, RoutedEventArgs e)
+    {
+      RenameFile();
+    }
+
+    private void ItemControlChangeImageFile_Click(object sender, RoutedEventArgs e)
+    {
+      ChangeImageFile();
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)

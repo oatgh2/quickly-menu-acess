@@ -107,9 +107,7 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
@@ -118,6 +116,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -144,16 +145,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChangeNameFile.xaml.cs">
-      <DependentUpon>ChangeNameFile.xaml</DependentUpon>
+    <Compile Include="CustomDialog.xaml.cs">
+      <DependentUpon>CustomDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controllers\MainWindowSocketController.cs" />
+    <Compile Include="CustomImageDialog.xaml.cs">
+      <DependentUpon>CustomImageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ConfigsHelper.cs" />
     <Compile Include="Helpers\WinApiHelper.cs" />
     <Compile Include="ICustomDialog.cs" />
     <Compile Include="Infraestructure\CustomControls.cs" />
     <Compile Include="Startup.cs" />
-    <Page Include="ChangeNameFile.xaml">
+    <Page Include="CustomDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomImageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
