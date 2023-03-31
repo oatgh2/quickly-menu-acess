@@ -1,0 +1,6 @@
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\bin\Debug\DirectoryManager.dll
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\bin\Debug\DirectoryManager.pdb
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\obj\Debug\DirectoryManager.csproj.AssemblyReference.cache
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\obj\Debug\DirectoryManager.csproj.CoreCompileInputs.cache
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\obj\Debug\DirectoryManager.dll
+C:\Workspace\QuickMenu\quickly-menu-acess\AppBarMenu\DirectoryManager\obj\Debug\DirectoryManager.pdb

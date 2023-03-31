@@ -1,4 +1,5 @@
-﻿<Window x:Class="AppBarMenu.MainWindow"
+﻿
+<Window x:Class="AppBarMenu.MainWindow"
         WindowStyle="None"
         MouseDown="Grid_MouseDown"
         ResizeMode="NoResize"
@@ -19,6 +20,16 @@
      AllowDrop="True"
      Background="{DynamicResource MaterialDesignPaper}"
      FontFamily="{DynamicResource MaterialDesignFont}" Height="600" Width="650">
+  <Window.Resources>
+    <DataTemplate x:Key="ImageList">
+      <StackPanel Orientation="Horizontal">
+        <Image Source="{Binding ImagePath}" Width="30" Height="30" />
+        <WrapPanel>
+          <Label Content="{Binding Name}" VerticalAlignment="Center" Foreground="White" />
+        </WrapPanel>
+      </StackPanel>
+    </DataTemplate>
+  </Window.Resources>
   <Border CornerRadius="7, 7, 7, 7">
 
     <Grid>
@@ -30,7 +41,12 @@
       </Grid.Background>
 
 
-      <ListBox ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Center" Height="358" Margin="0,85,0,0" VerticalAlignment="Top" Width="622" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="White" BorderBrush="Black" Background="{x:Null}" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick">
+      <ListBox ItemTemplate="{StaticResource ImageList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Center" Height="358" Margin="0,85,0,0" VerticalAlignment="Top" Width="622" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="White" BorderBrush="Black" Background="{x:Null}" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel></WrapPanel>
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
         <ListBox.ContextMenu>
           <ContextMenu x:Name="ContextStripListOpen">
             <MenuItem x:Name="BtnOpenItem" Click="ItemControlOpen_Click">

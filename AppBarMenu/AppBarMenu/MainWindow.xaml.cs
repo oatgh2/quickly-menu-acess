@@ -83,7 +83,7 @@ namespace AppBarMenu
     {
       try
       {
-        _controller = new FilesController();
+        _controller = new FilesController(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName));
         string[] imagesString = FileHelper.GetImages();
         for (int i = 0; i < imagesString.Length; i++)
         {
@@ -230,7 +230,7 @@ namespace AppBarMenu
       JumpList jumpList = new JumpList();
       foreach (FileModel item in _listModels)
       {
-        ListaDeItensBox.Items.Add(item.Name);
+        ListaDeItensBox.Items.Add(item);
         string name = string.IsNullOrEmpty(item.Extension) ? item.Name : item.Name.Replace(item.Extension, string.Empty);
         JumpTask jumpTask = new JumpTask();
         jumpTask.ApplicationPath = item.Path;

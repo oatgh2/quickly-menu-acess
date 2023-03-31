@@ -260,6 +260,10 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectoryManager\DirectoryManager.csproj">
+      <Project>{9EB2A462-2CD6-4320-86B3-78E4708A4446}</Project>
+      <Name>DirectoryManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RegistryManager\RegistryManager.csproj">
       <Project>{021102af-edda-49fe-8a7c-c8294435006e}</Project>
       <Name>RegistryManager</Name>

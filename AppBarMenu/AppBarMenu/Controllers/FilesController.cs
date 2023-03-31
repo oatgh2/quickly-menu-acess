@@ -5,18 +5,27 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using DirectoryManager;
 
 namespace AppBarMenu.Controllers
 {
   public class FilesController
   {
+    public FilesController(string workingDirectory)
+    {
+      _caminhoBase = FileHelper.GetCaminhoBase();
+      _imageManager = new ImageManager();
+      RefreshString();
+    }
     public FilesController()
     {
       _caminhoBase = FileHelper.GetCaminhoBase();
+      _imageManager = new ImageManager();
       RefreshString();
     }
     private string _caminhoBase;
     private string _stringJsonLoad;
+    private ImageManager _imageManager;
 
     public void ChangeImage(int itemPosition, string newImagePath)
     {
@@ -30,7 +39,7 @@ namespace AppBarMenu.Controllers
       if (file != null)
       {
         files.Remove(file);
-        file.ImagePath = newImagePath;
+        file.ImagePath = _imageManager.SaveImage(newImagePath);
         files.Add(file);
         SerializeObj(files);
       }
@@ -67,8 +76,8 @@ namespace AppBarMenu.Controllers
     {
       try
       {
-        string objetoJson = File.ReadAllText(_caminhoBase + "/Files.json");
-        _stringJsonLoad = objetoJson;
+        string jsonObj = File.ReadAllText(_caminhoBase + "/Files.json");
+        _stringJsonLoad = jsonObj;
       }
       catch (Exception ex)
       {
