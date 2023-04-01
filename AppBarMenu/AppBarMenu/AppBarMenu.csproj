@@ -151,6 +151,7 @@
     <Compile Include="CustomImageDialog.xaml.cs">
       <DependentUpon>CustomImageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entidades\MenuItem.cs" />
     <Compile Include="Helpers\ConfigsHelper.cs" />
     <Compile Include="Helpers\WinApiHelper.cs" />
     <Compile Include="ICustomDialog.cs" />

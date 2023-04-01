@@ -1,5 +1,4 @@
-﻿
-<Window x:Class="AppBarMenu.MainWindow"
+﻿<Window x:Class="AppBarMenu.MainWindow"
         WindowStyle="None"
         MouseDown="Grid_MouseDown"
         ResizeMode="NoResize"
@@ -23,12 +22,18 @@
   <Window.Resources>
     <DataTemplate x:Key="ImageList">
       <StackPanel Orientation="Horizontal">
-        <Image Source="{Binding ImagePath}" Width="30" Height="30" />
+        <Image Source="{Binding Image}" Width="30" Height="30" />
         <WrapPanel>
           <Label Content="{Binding Name}" VerticalAlignment="Center" Foreground="White" />
         </WrapPanel>
       </StackPanel>
     </DataTemplate>
+    <!--<DataTemplate x:Key="MenuItemList">
+      <ContextMenu>
+        <MenuItem Icon="{Binding Icon}" Header="{Binding Text}" Click="{Binding OnClick}"></MenuItem>
+      </ContextMenu>
+    </DataTemplate>-->
+
   </Window.Resources>
   <Border CornerRadius="7, 7, 7, 7">
 
@@ -47,7 +52,12 @@
             <WrapPanel></WrapPanel>
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
-        <ListBox.ContextMenu>
+        <!--<ListBox.ContextMenu>
+          <ContextMenu ItemTemplate="{StaticResource MenuItemList}">
+
+          </ContextMenu>
+        </ListBox.ContextMenu>-->
+        <!--<ListBox.ContextMenu>
           <ContextMenu x:Name="ContextStripListOpen">
             <MenuItem x:Name="BtnOpenItem" Click="ItemControlOpen_Click">
               <MenuItem.Icon >
@@ -92,7 +102,7 @@
               <MenuItem.Header>Excluir</MenuItem.Header>
             </MenuItem>
           </ContextMenu>
-        </ListBox.ContextMenu>
+        </ListBox.ContextMenu>-->
       </ListBox>
       <Button x:Name="BtnAdd" Content="Adicionar" VerticalAlignment="Top" Width="101" Click="BtnAdd_Click" Margin="10,452,0,0" Height="40" HorizontalAlignment="Left" Background="White" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>
       <Button x:Name="CloseBtn" Content="Sair" HorizontalAlignment="Left" Margin="561,558,0,0" VerticalAlignment="Top" Width="75" Click="CloseBtn_Click" Background="#DDFFFFFF" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>

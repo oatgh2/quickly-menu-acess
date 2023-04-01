@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AppBarMenu"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow"
         Title="CustomImageDialog" Height="221" Width="177">
   <Grid>
 

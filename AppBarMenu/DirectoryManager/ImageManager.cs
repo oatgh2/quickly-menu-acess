@@ -10,7 +10,7 @@ namespace DirectoryManager
 {
   public class ImageManager
   {
-    private const string IMAGEPATH = "\\~\\img";
+    private const string IMAGEPATH = "~\\img";
 
     public ImageManager()
     {

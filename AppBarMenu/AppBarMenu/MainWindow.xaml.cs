@@ -18,6 +18,7 @@ using static RegistryManager.Enum.EnumRegHelper;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 using System.Drawing;
+using AppBarMenu.Entidades;
 
 namespace AppBarMenu
 {
@@ -79,6 +80,26 @@ namespace AppBarMenu
     //  }
     //}
 
+    private void _loadContextMenu()
+    {
+      ContextMenu contextMenu = new ContextMenu();
+      MenuItem item1 = new MenuItem();
+      item1.Header = "Ola";
+      item1.Items.Add(new MenuItem()
+      {
+        Header = "Mundo"
+      });
+      contextMenu.Items.Add(item1);
+      ListaDeItensBox.ContextMenu = contextMenu;
+      //List<CustomMenuItem> menuItems= new List<CustomMenuItem>();
+
+      //CustomMenuItem menuItem = new CustomMenuItem();
+      //menuItem.Title = "Teste";
+      //menuItem.Icon = imagem_Delete;
+      //menuItem.OnClick += ItemControlRenameFile_Click;
+      //ListaDeItensBox.ContextMenu.Items.Add(menuItem);
+    }
+
     private void InitialConfigs()
     {
       try
@@ -118,7 +139,7 @@ namespace AppBarMenu
           }
         }
         _reloadList();
-
+        _loadContextMenu();
         ListaDeItensBox.AllowDrop = true;
         trayBar.Icon = faviconIco;
         trayBar.Visible = true;
@@ -287,7 +308,7 @@ namespace AppBarMenu
           new Forms.ToolStripDropDownButton(
             string.IsNullOrEmpty(item.Extension) ? item.Name
           : item.Name.Replace(item.Extension, string.Empty), imagemIcon
-          , new Forms.ToolStripButton($"{i}. Abrir", imagem_Open, ClickTraybarOpen) 
+          , new Forms.ToolStripButton($"{i}. Abrir", imagem_Open, ClickTraybarOpen)
           , new Forms.ToolStripButton($"{i}. Abrir Pasta", imagem_OpenFile, ClickTraybarOpenFolder)
           , new Forms.ToolStripButton($"{i}. Renomear", imagem_Open, RenameFileByTraybar)));
       }
@@ -324,10 +345,11 @@ namespace AppBarMenu
     {
       int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
       CustomImageDialog changePage = new CustomImageDialog(
-        string.IsNullOrEmpty(_controller.GetFiles()[selectedIndex].ImagePath) 
+        string.IsNullOrEmpty(_controller.GetFiles()[selectedIndex].ImagePath)
         ? _controller.GetFiles()[selectedIndex].Path
         : _controller.GetFiles()[selectedIndex].ImagePath);
-      changePage.OnDone += (newName, context) => {
+      changePage.OnDone += (newName, context) =>
+      {
         CustomImageDialog c = (CustomImageDialog)context;
         _controller.ChangeImage(selectedIndex, newName);
         _reloadList();
@@ -346,7 +368,8 @@ namespace AppBarMenu
     {
       int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
       CustomDialog changePage = new CustomDialog("Concluír", "Digite o nome:", _controller.GetFiles()[selectedIndex].Name);
-      changePage.OnDone += (newName, context) => {
+      changePage.OnDone += (newName, context) =>
+      {
         CustomDialog c = (CustomDialog)context;
         _controller.ChangeNameItem(selectedIndex, newName);
         _reloadList();
@@ -483,7 +506,7 @@ namespace AppBarMenu
       {
         if (ListaDeItensBox.SelectedIndex != -1)
         {
-          var item = _listModels[ListaDeItensBox.SelectedIndex];
+          FileModel item = _listModels[ListaDeItensBox.SelectedIndex];
           System.Diagnostics.Process.Start("explorer.exe", item.Path.Replace(item.Name, string.Empty));
         }
         else
@@ -544,7 +567,7 @@ namespace AppBarMenu
       {
         if (ListaDeItensBox.SelectedIndex != -1)
         {
-          ContextStripListOpen.IsOpen = true;
+          //ContextStripListOpen.IsOpen = true;
         }
         else
         {
