@@ -11,14 +11,19 @@ using System.Drawing.Imaging;
 
 namespace Entities.Entidades
 {
+  
   public class FileModel
   {
     public Guid Id { get; set; }
+    public List<FileModel> ListChildren { get; set; }
+    public bool IsGroup { get; set; }
     public string Name { get; set; }
     public string Path { get; set; }
     public string Extension { get; set; }
     public string MimmeType { get; set; }
     public string ImagePath { get; set; }
+    public bool IsInGroup { get; set; }
+    public Guid? IdGroup { get; set; }
     public byte[] Image
     {
       get

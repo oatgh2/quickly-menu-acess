@@ -9,6 +9,7 @@ using DirectoryManager;
 
 namespace AppBarMenu.Controllers
 {
+
   public class FilesController
   {
     public FilesController(string workingDirectory)
@@ -89,7 +90,70 @@ namespace AppBarMenu.Controllers
 
     }
 
+    public void AddGroup(string nameGroup, string imagePath,List<FileModel> listItens)
+    {
+      FileModel file = new FileModel();
+      file.Name = nameGroup;
+      file.ImagePath = imagePath;
+      file.ListChildren = listItens;
+      file.IsGroup = true;
+      file.Id = Guid.NewGuid();
+      List<FileModel> files = GetFiles();
+      files.Add(file);
+      SerializeObj(files);
+    }
 
+    public void AddInGroup(Guid idGroup, FileModel fileModel)
+    {
+      List<FileModel> files = GetFiles();
+
+      FileModel group = files.Where(x => x.Id == idGroup).FirstOrDefault();
+
+     
+      fileModel.IsInGroup = true;
+      fileModel.IdGroup = idGroup;
+      files.Add(fileModel);
+      if (group != null)
+      {
+        group.ListChildren.Add(fileModel);
+      }
+      SerializeObj(files);
+    }
+
+    public void AddInGroup(Guid idGroup, List<FileModel> filesModel)
+    {
+      List<FileModel> files = GetFiles();
+
+      FileModel group = files.Where(x => x.Id == idGroup).FirstOrDefault();
+
+      foreach (FileModel item in filesModel)
+      {
+        item.IsInGroup = true;
+        item.IdGroup = idGroup;
+        files.Add(item);
+      }
+      
+      if (group != null)
+      {
+        group.ListChildren.AddRange(filesModel);
+      }
+      SerializeObj(files);
+    }
+
+    public void RemoveInGroup(Guid idGroup, Guid idFile)
+    {
+      List<FileModel> files = GetFiles();
+      FileModel group = files.Where(x => x.Id == idGroup).FirstOrDefault();
+      FileModel removedItem = group.ListChildren.Where(x => x.Id == idFile).FirstOrDefault();
+      group.ListChildren.Remove(removedItem);
+      files.Remove(group);
+      files.Add(group);
+      removedItem.IdGroup = null;
+      removedItem.IsInGroup = false;
+      files.Remove(removedItem);
+      files.Add(removedItem);
+      SerializeObj(files);
+    }
 
     public void Remove(int index)
     {

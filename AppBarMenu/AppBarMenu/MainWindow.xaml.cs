@@ -139,7 +139,7 @@ namespace AppBarMenu
           }
         }
         _reloadList();
-        _loadContextMenu();
+        //_loadContextMenu();
         ListaDeItensBox.AllowDrop = true;
         trayBar.Icon = faviconIco;
         trayBar.Visible = true;
@@ -561,13 +561,115 @@ namespace AppBarMenu
       }
     }
 
+    private void AddNewGroup(object sender, EventArgs e)
+    {
+      FileModel fileModel = new FileModel();
+      CustomDialog customDialog = new CustomDialog("Próximo", "Novo Grupo:", "");
+      customDialog.Show();
+      customDialog.OnFinish += (context) =>
+      {
+        CustomDialog customDialog1 = context as CustomDialog;
+        customDialog1.Close();
+      };
+
+      customDialog.OnDone += (newName, context) =>
+      {
+        string nameGroup = "";
+        nameGroup = newName;
+
+        CustomImageDialog customImageDialog = new CustomImageDialog("QuickStartMenu.exe");
+        customImageDialog.Show();
+        customImageDialog.OnFinish += (context1) =>
+        {
+          CustomImageDialog context2 = context1 as CustomImageDialog;
+          context2.Close();
+        };
+
+        customImageDialog.OnDone += (newName1, context1) =>
+        {
+          _controller.AddGroup(newName, newName1, null);
+          _reloadList();
+        };
+      };
+
+
+    }
+
+
+    private List<MenuItem> getMenuDefaultItem()
+    {
+      List<MenuItem> menuItems = new List<MenuItem>();
+      MenuItem openGroup = new MenuItem()
+      {
+        Header = "Abrir",
+        Icon = imagem_Open,
+      };
+      openGroup.Click += ItemControlOpen_Click;
+      menuItems.Add(openGroup);
+
+      MenuItem removeGroup = new MenuItem()
+      {
+        Header = "Remover",
+        Icon = imagem_Delete
+      };
+      removeGroup.Click += ItemControlRemove_Click;
+      menuItems.Add(removeGroup);
+
+      MenuItem addInGroup = new MenuItem()
+      {
+        Header = "Inserir no grupo",
+        Icon = imagem_Delete
+      };
+
+      addInGroup.Click += (obj, e) => {
+        
+      };
+      menuItems.Add(addInGroup);
+
+
+      return menuItems;
+    }
+
+    private List<MenuItem> getMenuDefaultGrupo()
+    {
+      List<MenuItem> menuItems = new List<MenuItem>();
+      MenuItem openGroup = new MenuItem()
+      {
+        Header = "Abrir",
+        Icon = imagem_Open,
+      };
+      openGroup.Click += ItemControlOpen_Click;
+      menuItems.Add(openGroup);
+
+      MenuItem removeGroup = new MenuItem()
+      {
+        Header = "Remover",
+        Icon = imagem_Delete
+      };
+      removeGroup.Click += ItemControlRemove_Click;
+      menuItems.Add(removeGroup);
+
+      return menuItems;
+    }
+
     private void ListaDeItensBox_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       try
       {
         if (ListaDeItensBox.SelectedIndex != -1)
         {
-          //ContextStripListOpen.IsOpen = true;
+          ContextMenu contextMenu = new ContextMenu();
+          FileModel file = _controller.GetFiles()[ListaDeItensBox.SelectedIndex];
+
+          if (file.IsGroup)
+          {
+            getMenuDefaultGrupo().ForEach(x => contextMenu.Items.Add(x));
+          }
+          else
+          {
+            getMenuDefaultItem().ForEach(x => contextMenu.Items.Add(x));
+          }
+          ListaDeItensBox.ContextMenu = contextMenu;
         }
         else
         {

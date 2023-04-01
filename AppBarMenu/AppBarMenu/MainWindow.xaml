@@ -37,7 +37,7 @@
   </Window.Resources>
   <Border CornerRadius="7, 7, 7, 7">
 
-    <Grid>
+    <Grid Cursor="Hand">
       <Grid.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
           <GradientStop Color="#FF8422FF" Offset="0.847"/>
@@ -107,6 +107,7 @@
       <Button x:Name="BtnAdd" Content="Adicionar" VerticalAlignment="Top" Width="101" Click="BtnAdd_Click" Margin="10,452,0,0" Height="40" HorizontalAlignment="Left" Background="White" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>
       <Button x:Name="CloseBtn" Content="Sair" HorizontalAlignment="Left" Margin="561,558,0,0" VerticalAlignment="Top" Width="75" Click="CloseBtn_Click" Background="#DDFFFFFF" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>
       <Label x:Name="ValorTotalLbl" Content="" HorizontalAlignment="Left" Margin="10,421,0,0" VerticalAlignment="Top" Width="8"/>
+      <Button Content="Adicionar Grupo&#xD;&#xA;" HorizontalAlignment="Left" Margin="116,456,0,0" VerticalAlignment="Top" Width="209" Click="AddNewGroup"/>
 
 
 
