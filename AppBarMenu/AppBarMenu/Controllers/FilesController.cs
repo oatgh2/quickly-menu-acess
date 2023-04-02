@@ -28,6 +28,30 @@ namespace AppBarMenu.Controllers
     private string _stringJsonLoad;
     private ImageManager _imageManager;
 
+
+    private FileModel _context;
+
+    public FileModel Context { get { return _context; } }
+
+    public bool IsContextualized
+    {
+      get
+      {
+        return Context != null;
+      }
+    }
+
+    public string ChangeContext(FileModel fileModel)
+    {
+      _context = fileModel;
+      return fileModel.Name;
+    }
+
+    public void ClearContext()
+    {
+      _context = null;
+    }
+
     public void ChangeImage(int itemPosition, string newImagePath)
     {
       if (string.IsNullOrEmpty(newImagePath))
@@ -90,7 +114,7 @@ namespace AppBarMenu.Controllers
 
     }
 
-    public void AddGroup(string nameGroup, string imagePath,List<FileModel> listItens)
+    public void AddGroup(string nameGroup, string imagePath, List<FileModel> listItens)
     {
       FileModel file = new FileModel();
       file.Name = nameGroup;
@@ -109,8 +133,7 @@ namespace AppBarMenu.Controllers
 
       FileModel group = files.Where(x => x.Id == idGroup).FirstOrDefault();
 
-     
-      fileModel.IsInGroup = true;
+
       fileModel.IdGroup = idGroup;
       files.Add(fileModel);
       if (group != null)
@@ -128,11 +151,10 @@ namespace AppBarMenu.Controllers
 
       foreach (FileModel item in filesModel)
       {
-        item.IsInGroup = true;
         item.IdGroup = idGroup;
         files.Add(item);
       }
-      
+
       if (group != null)
       {
         group.ListChildren.AddRange(filesModel);
@@ -149,25 +171,67 @@ namespace AppBarMenu.Controllers
       files.Remove(group);
       files.Add(group);
       removedItem.IdGroup = null;
-      removedItem.IsInGroup = false;
       files.Remove(removedItem);
       files.Add(removedItem);
       SerializeObj(files);
     }
 
+    private void SaveContext()
+    {
+      FileModel fileContext = Context;
+      _context = null;
+      List<FileModel> files = GetFiles();
+      files.Remove(files.Where(x => x.Id == fileContext.Id).FirstOrDefault());
+      files.Add(fileContext);
+      SerializeObj(files);
+      _context = fileContext;
+    }
+
+    public void MoveOutGroup(int indexFile)
+    {
+      List<FileModel> files = GetFiles();
+      FileModel fileMoving = files[indexFile];
+      files.Remove(fileMoving);
+      Context.ListChildren = files;
+      FileModel actuallyContext = Context;
+      _context = null;
+      Add(fileMoving);
+      _context = actuallyContext;
+    }
+
     public void Remove(int index)
     {
       List<FileModel> list = GetFiles();
-      list.RemoveAt(index);
-      SerializeObj(list);
+
+      if (Context != null)
+      {
+        list.RemoveAt(index);
+        Context.ListChildren = list;
+        SaveContext();
+      }
+      else
+      {
+        list.RemoveAt(index);
+        SerializeObj(list);
+      }
     }
+
+
 
     public void Add(FileModel model)
     {
-      //model.ImagePath = model.Path;
       List<FileModel> list = GetFiles();
-      list.Add(model);
-      SerializeObj(list);
+      if (Context != null)
+      {
+        list.Add(model);
+        Context.ListChildren = list;
+        SaveContext();
+      }
+      else
+      {
+        list.Add(model);
+        SerializeObj(list);
+      }
     }
     public void DeleteFile(int index)
     {
@@ -187,8 +251,18 @@ namespace AppBarMenu.Controllers
     {
       try
       {
-        List<FileModel> retorno = JsonConvert.DeserializeObject<List<FileModel>>(_stringJsonLoad);
-        return retorno;
+        if (Context == null)
+        {
+          List<FileModel> retorno = JsonConvert.DeserializeObject<List<FileModel>>(_stringJsonLoad);
+          return retorno;
+        }
+        else
+        {
+          if (Context.ListChildren == null)
+            return new List<FileModel>();
+
+          return Context.ListChildren;
+        }
       }
       catch (Exception ex)
       {

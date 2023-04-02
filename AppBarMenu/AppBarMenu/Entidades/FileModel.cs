@@ -22,7 +22,6 @@ namespace Entities.Entidades
     public string Extension { get; set; }
     public string MimmeType { get; set; }
     public string ImagePath { get; set; }
-    public bool IsInGroup { get; set; }
     public Guid? IdGroup { get; set; }
     public byte[] Image
     {

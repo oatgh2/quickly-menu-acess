@@ -37,7 +37,7 @@
   </Window.Resources>
   <Border CornerRadius="7, 7, 7, 7">
 
-    <Grid Cursor="Hand">
+    <Grid x:Name="MainGrid" Cursor="Hand">
       <Grid.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
           <GradientStop Color="#FF8422FF" Offset="0.847"/>
@@ -46,7 +46,13 @@
       </Grid.Background>
 
 
-      <ListBox ItemTemplate="{StaticResource ImageList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ToolTip="Arraste e solte para adcionar um novo item" x:Name="ListaDeItensBox" HorizontalAlignment="Center" Height="358" Margin="0,85,0,0" VerticalAlignment="Top" Width="622" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="White" BorderBrush="Black" Background="{x:Null}" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick">
+      <ListBox  ItemTemplate="{StaticResource ImageList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ToolTip="Arraste e solte para adcionar um novo item" x:Name="itemsListBox" HorizontalAlignment="Center" Height="358" Margin="0,85,0,0" VerticalAlignment="Top" Width="604" MouseRightButtonUp="ListaDeItensBox_MouseRightButtonUp" Foreground="#FF8422FF" BorderBrush="Black" MouseDoubleClick="ListaDeItensBox_MouseDoubleClick" RenderTransformOrigin="1.007,0.503">
+        <ListBox.Background>
+          <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFA02FBB" Offset="0"/>
+            <GradientStop Color="#FF4F55B7" Offset="1"/>
+          </LinearGradientBrush>
+        </ListBox.Background>
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel></WrapPanel>
@@ -107,7 +113,7 @@
       <Button x:Name="BtnAdd" Content="Adicionar" VerticalAlignment="Top" Width="101" Click="BtnAdd_Click" Margin="10,452,0,0" Height="40" HorizontalAlignment="Left" Background="White" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>
       <Button x:Name="CloseBtn" Content="Sair" HorizontalAlignment="Left" Margin="561,558,0,0" VerticalAlignment="Top" Width="75" Click="CloseBtn_Click" Background="#DDFFFFFF" Cursor="Hand" BorderBrush="{x:Null}" Foreground="#DD003FFF"/>
       <Label x:Name="ValorTotalLbl" Content="" HorizontalAlignment="Left" Margin="10,421,0,0" VerticalAlignment="Top" Width="8"/>
-      <Button Content="Adicionar Grupo&#xD;&#xA;" HorizontalAlignment="Left" Margin="116,456,0,0" VerticalAlignment="Top" Width="209" Click="AddNewGroup"/>
+      <Button x:Name="BtnAdc" Content="Adicionar Grupo&#xD;&#xA;" HorizontalAlignment="Left" Margin="116,456,0,0" VerticalAlignment="Top" Width="209" Click="AddNewGroup"/>
 
 
 

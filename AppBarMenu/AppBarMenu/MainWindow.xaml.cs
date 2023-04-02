@@ -19,6 +19,10 @@ using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 using System.Drawing;
 using AppBarMenu.Entidades;
+using System.Windows.Media;
+using System.Runtime.Remoting.Contexts;
+using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace AppBarMenu
 {
@@ -90,7 +94,7 @@ namespace AppBarMenu
         Header = "Mundo"
       });
       contextMenu.Items.Add(item1);
-      ListaDeItensBox.ContextMenu = contextMenu;
+      itemsListBox.ContextMenu = contextMenu;
       //List<CustomMenuItem> menuItems= new List<CustomMenuItem>();
 
       //CustomMenuItem menuItem = new CustomMenuItem();
@@ -140,7 +144,7 @@ namespace AppBarMenu
         }
         _reloadList();
         //_loadContextMenu();
-        ListaDeItensBox.AllowDrop = true;
+        itemsListBox.AllowDrop = true;
         trayBar.Icon = faviconIco;
         trayBar.Visible = true;
         trayBar.DoubleClick += DoubleClickTrayBar;
@@ -210,7 +214,14 @@ namespace AppBarMenu
         Forms.ToolStripButton entidade = sender as Forms.ToolStripButton;
         string[] splittedValueName = entidade.AccessibilityObject.Name.Split('.');
         int objValueItemIndex = Int32.Parse(splittedValueName[0]);
-        System.Diagnostics.Process.Start(_listModels[objValueItemIndex].Path);
+        if (!_listModels[itemsListBox.SelectedIndex].IsGroup)
+          System.Diagnostics.Process.Start(_listModels[itemsListBox.SelectedIndex].Path);
+        else
+        {
+          FileModel group = _listModels[itemsListBox.SelectedIndex];
+          if (group.ListChildren != null)
+            group.ListChildren.ForEach(x => System.Diagnostics.Process.Start(x.Path));
+        }
       }
       catch (Exception ex) { }
     }
@@ -247,11 +258,15 @@ namespace AppBarMenu
     {
       _controller.RefreshString();
       _listModels = _controller.GetFiles();
-      ListaDeItensBox.Items.Clear();
+      itemsListBox.Items.Clear();
+      
       JumpList jumpList = new JumpList();
       foreach (FileModel item in _listModels)
       {
-        ListaDeItensBox.Items.Add(item);
+        itemsListBox.Items.Add(item);
+      }
+      foreach (FileModel item in _listModels.Where(x => !x.IsGroup))
+      {
         string name = string.IsNullOrEmpty(item.Extension) ? item.Name : item.Name.Replace(item.Extension, string.Empty);
         JumpTask jumpTask = new JumpTask();
         jumpTask.ApplicationPath = item.Path;
@@ -343,7 +358,7 @@ namespace AppBarMenu
 
     private void ChangeImageFile(int? item = null)
     {
-      int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
+      int selectedIndex = item ?? itemsListBox.SelectedIndex;
       CustomImageDialog changePage = new CustomImageDialog(
         string.IsNullOrEmpty(_controller.GetFiles()[selectedIndex].ImagePath)
         ? _controller.GetFiles()[selectedIndex].Path
@@ -366,7 +381,7 @@ namespace AppBarMenu
 
     private void RenameFile(int? item = null)
     {
-      int selectedIndex = item ?? ListaDeItensBox.SelectedIndex;
+      int selectedIndex = item ?? itemsListBox.SelectedIndex;
       CustomDialog changePage = new CustomDialog("Concluír", "Digite o nome:", _controller.GetFiles()[selectedIndex].Name);
       changePage.OnDone += (newName, context) =>
       {
@@ -459,13 +474,13 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
           var result = MessageBox.Show("Ao confirmar, o arquivo será apagado do seu sistema de arquivos, deseja continuar?",
         "Confirmar?", MessageBoxButton.YesNo, MessageBoxImage.Question);
           if (result == MessageBoxResult.Yes)
           {
-            _controller.DeleteFile(ListaDeItensBox.SelectedIndex);
+            _controller.DeleteFile(itemsListBox.SelectedIndex);
             _reloadList();
           }
         }
@@ -486,9 +501,17 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
-          System.Diagnostics.Process.Start(_listModels[ListaDeItensBox.SelectedIndex].Path);
+          if(!_listModels[itemsListBox.SelectedIndex].IsGroup)
+            System.Diagnostics.Process.Start(_listModels[itemsListBox.SelectedIndex].Path);
+          else
+          {
+            FileModel group = _listModels[itemsListBox.SelectedIndex];
+            if (group.ListChildren != null)
+              group.ListChildren.ForEach(x => System.Diagnostics.Process.Start(x.Path));
+          }
+
 
         }
         else
@@ -504,9 +527,9 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
-          FileModel item = _listModels[ListaDeItensBox.SelectedIndex];
+          FileModel item = _listModels[itemsListBox.SelectedIndex];
           System.Diagnostics.Process.Start("explorer.exe", item.Path.Replace(item.Name, string.Empty));
         }
         else
@@ -522,9 +545,9 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
-          int itemSelecionado = ListaDeItensBox.SelectedIndex;
+          int itemSelecionado = itemsListBox.SelectedIndex;
           _controller.Remove(itemSelecionado);
           _reloadList();
         }
@@ -545,7 +568,7 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
           MessageBox.Show("ClicadoDetails");
         }
@@ -602,7 +625,6 @@ namespace AppBarMenu
       MenuItem openGroup = new MenuItem()
       {
         Header = "Abrir",
-        Icon = imagem_Open,
       };
       openGroup.Click += ItemControlOpen_Click;
       menuItems.Add(openGroup);
@@ -610,21 +632,16 @@ namespace AppBarMenu
       MenuItem removeGroup = new MenuItem()
       {
         Header = "Remover",
-        Icon = imagem_Delete
       };
       removeGroup.Click += ItemControlRemove_Click;
       menuItems.Add(removeGroup);
 
-      MenuItem addInGroup = new MenuItem()
+      MenuItem renameGroup = new MenuItem()
       {
-        Header = "Inserir no grupo",
-        Icon = imagem_Delete
+        Header = "Renomear",
       };
-
-      addInGroup.Click += (obj, e) => {
-        
-      };
-      menuItems.Add(addInGroup);
+      removeGroup.Click += ItemControlRemove_Click;
+      menuItems.Add(removeGroup);
 
 
       return menuItems;
@@ -636,7 +653,6 @@ namespace AppBarMenu
       MenuItem openGroup = new MenuItem()
       {
         Header = "Abrir",
-        Icon = imagem_Open,
       };
       openGroup.Click += ItemControlOpen_Click;
       menuItems.Add(openGroup);
@@ -644,7 +660,6 @@ namespace AppBarMenu
       MenuItem removeGroup = new MenuItem()
       {
         Header = "Remover",
-        Icon = imagem_Delete
       };
       removeGroup.Click += ItemControlRemove_Click;
       menuItems.Add(removeGroup);
@@ -656,10 +671,10 @@ namespace AppBarMenu
     {
       try
       {
-        if (ListaDeItensBox.SelectedIndex != -1)
+        if (itemsListBox.SelectedIndex != -1)
         {
           ContextMenu contextMenu = new ContextMenu();
-          FileModel file = _controller.GetFiles()[ListaDeItensBox.SelectedIndex];
+          FileModel file = _controller.GetFiles()[itemsListBox.SelectedIndex];
 
           if (file.IsGroup)
           {
@@ -669,7 +684,7 @@ namespace AppBarMenu
           {
             getMenuDefaultItem().ForEach(x => contextMenu.Items.Add(x));
           }
-          ListaDeItensBox.ContextMenu = contextMenu;
+          itemsListBox.ContextMenu = contextMenu;
         }
         else
         {
@@ -683,10 +698,94 @@ namespace AppBarMenu
 
     }
 
+    Thickness defaultMarginValue;
+    double defaulWidthValue;
+    System.Windows.Controls.Image groupImage;
+    System.Windows.Controls.Label groupLabel;
+    System.Windows.Controls.Button groupExitButton;
+
+    private void loadContext()
+    {
+      FileModel file = _controller.Context;
+      defaulWidthValue = itemsListBox.Width;
+      defaultMarginValue = itemsListBox.Margin;
+      itemsListBox.Width = 420;
+      itemsListBox.Margin = new Thickness(180, 85, 0, 0);
+      groupImage = new System.Windows.Controls.Image();
+      groupImage.Height = 100;
+      groupImage.Width = 100;
+      groupImage.Margin = new Thickness(18, 85, 0, 0);
+      groupImage.VerticalAlignment = VerticalAlignment.Top;
+      groupImage.HorizontalAlignment = HorizontalAlignment.Left;
+      if (!file.ImagePath.Equals("QuickStartMenu.exe"))
+      {
+        BitmapImage imageBit = new BitmapImage(new Uri(file.ImagePath));
+        groupImage.Source = imageBit;
+      }
+        
+      
+
+
+      groupLabel = new System.Windows.Controls.Label();
+      groupLabel.Margin = new Thickness(18, 196, 0, 0);
+      groupLabel.Content = file.Name;
+      groupLabel.Width = 72;
+      groupLabel.VerticalAlignment = VerticalAlignment.Top;
+      groupLabel.HorizontalAlignment = HorizontalAlignment.Left;
+      groupLabel.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
+
+      groupExitButton = new System.Windows.Controls.Button();
+      groupExitButton.Margin = new Thickness(104, 196, 0, 0);
+      groupExitButton.Content = "Voltar";
+      groupExitButton.Width= 70;
+      groupExitButton.VerticalAlignment= VerticalAlignment.Top;
+      groupExitButton.HorizontalAlignment = HorizontalAlignment.Left;
+      groupExitButton.Click += (sender, e) =>
+      {
+        unloadContext();
+      };
+      groupExitButton.Visibility = Visibility.Visible;
+      groupImage.Visibility = Visibility.Visible;
+      groupLabel.Visibility = Visibility.Visible;
+      BtnAdc.Visibility = Visibility.Hidden;
+      MainGrid.Children.Add(groupExitButton);
+      MainGrid.Children.Add(groupLabel);
+      MainGrid.Children.Add(groupImage);
+    }
+
+    private void unloadContext()
+    {
+      itemsListBox.Width = defaulWidthValue;
+      itemsListBox.Margin = defaultMarginValue;
+      MainGrid.Children.Remove(groupExitButton);
+      MainGrid.Children.Remove(groupLabel);
+      MainGrid.Children.Remove(groupImage);
+      BtnAdc.Visibility= Visibility.Visible;
+      _controller.ClearContext();
+      _reloadList();
+    }
+
     private void ListaDeItensBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-
+      ListBox target = sender as ListBox;
+      FileModel file = target.SelectedItem as FileModel;
+      if (file != null && file.IsGroup)
+      {
+        _controller.ChangeContext(file);
+        loadContext();
+        _reloadList();
+      }
     }
+
+    //private void itemsListBox_MouseUp(object sender, MouseButtonEventArgs e)
+    //{
+    //  if (_controller.IsContextualized)
+    //  {
+    //    _controlzler.ClearContext();
+    //    itemsListBox.Width = defaulWidthValue;
+    //    itemsListBox.Margin = defaultMarginValue;
+    //  }
+    //}
 
     private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -704,5 +803,7 @@ namespace AppBarMenu
     {
       //ShowToast("Teste", Guid.NewGuid());
     }
+
+
   }
 }
